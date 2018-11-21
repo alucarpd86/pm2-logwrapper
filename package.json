@@ -1,0 +1,22 @@
+{
+  "name": "pm2-logwrapper",
+  "version": "1.0.0",
+  "description": "log wrapper around console.log / console.error to implements different log levels",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alucarpd86/pm2-logwrapper.git"
+  },
+  "keywords": [
+    "pm2"
+  ],
+  "author": "Matteo Bruni",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alucarpd86/pm2-logwrapper/issues"
+  },
+  "homepage": "https://github.com/alucarpd86/pm2-logwrapper#readme"
+}
