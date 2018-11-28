@@ -1,3 +1,5 @@
+var cluster = require('cluster');
+
 var opts = {
     env_var : "LOG_LEVEL",
     errors_on_out: false
@@ -74,7 +76,7 @@ function isLevelEnabled(level) {
 
 function log(level, message) {
     if (isLevelEnabled(level)) {
-        console.log(message);
+        console.log(getPrefix() + message);
         return true;
     }
     return false;
@@ -82,7 +84,7 @@ function log(level, message) {
 
 function error(level, message) {
     if (getLevel()>=levels.indexOf(level)) {
-        console.error(message);
+        console.error(getPrefix() + message);
         return true;
     }
     return false;
@@ -94,4 +96,12 @@ function getLevel() {
         level = process.env[opts.env_var].toLowerCase();
     }
     return levels.indexOf(level);
+}
+
+function getPrefix() {
+    return "["+getId()+"]" + " ";
+}
+
+function getId() {
+    return cluster.isMaster?"Master":"Worker-"+cluster.worker.id;
 }
