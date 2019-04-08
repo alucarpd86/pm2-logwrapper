@@ -1,101 +1,117 @@
 var cluster = require('cluster');
 
-var opts = {
-    env_var : "LOG_LEVEL",
-    errors_on_out: false
+var levels = {
+    OFF: "OFF",
+    FATAL: "FATAL",
+    ERROR: "ERROR",
+    WARN: "WARN",
+    INFO: "INFO",
+    DEBUG: "DEBUG",
+    TRACE: "TRACE"
 };
 
-var levels = [
-    "off",
-    "fatal",
-    "error",
-    "warn",
-    "info",
-    "debug",
-    "trace"
-];
-
+var opts = {
+    env_var : "LOG_LEVEL",
+    errors_on_out: false,
+    categories: {
+        "default": levels.INFO
+    }
+};
 
 module.exports = {
     init : function(options) {
         opts = Object.assign(opts, options);
+        if (opts.env_var && process.env[opts.env_var]) {
+            opts.categories.default = process.env[opts.env_var];
+        }
     },
 
-    trace : function(message) {
-        return log("trace", message);
-    },
-    isTraceEnabled : function() {
-        return isLevelEnabled("trace");
-    },
-
-    debug : function(message) {
-        return log("debug", message);
-    },
-    isDebugEnabled : function() {
-        return isLevelEnabled("debug");
+    setCategory : function(level, category) {
+        if (!category) category="default";
+        if (Object.keys(levels).indexOf(level)==-1) level = levels.INFO;
+        opts.categories[category] = level;
     },
 
-    info : function(message) {
-        return log("info", message);
-    },
-    isInfoEnabled : function() {
-        return isLevelEnabled("info");
-    },
-
-    warn : function(message) {
-        return log("warn", message);
-    },
-    isWarnEnabled : function() {
-        return isLevelEnabled("warn");
+    setCategories: function(categories) {
+        if (categories && typeof categories == "object") {
+            opts = Object.assign(opts, {categories: categories});
+        }
     },
 
-    error : function(message) {
+    levels: levels,
+
+    trace : function(message, category) {
+        return log(levels.TRACE, message, category);
+    },
+    isTraceEnabled : function(category) {
+        return isLevelEnabled(levels.TRACE, category);
+    },
+
+    debug : function(message, category) {
+        return log(levels.DEBUG, message, category);
+    },
+    isDebugEnabled : function(category) {
+        return isLevelEnabled(levels.DEBUG, category);
+    },
+
+    info : function(message, category) {
+        return log(levels.INFO, message, category);
+    },
+    isInfoEnabled : function(category) {
+        return isLevelEnabled(levels.INFO, category);
+    },
+
+    warn : function(message, category) {
+        return log(levels.WARN, message, category);
+    },
+    isWarnEnabled : function(category) {
+        return isLevelEnabled(levels.WARN, category);
+    },
+
+    error : function(message, category) {
         let tmp = true;
         if (opts.errors_on_out)
-            tmp = log("error", message);
-        return tmp && error("error", message);
+            tmp = log(levels.ERROR, message, category);
+        return tmp && stdError(levels.ERROR, message, category);
     },
-    isErrorEnabled : function() {
-        return isLevelEnabled("error");
+    isErrorEnabled : function(category) {
+        return isLevelEnabled(levels.ERROR, category);
     },
 
-    fatal : function(message) {
+    fatal : function(message, category) {
         let tmp = true;
         if (opts.errors_on_out)
-            tmp = log("fatal", message);
-        return tmp && error("error", message);
+            tmp = log(levels.FATAL, message, category);
+        return tmp && stdError(levels.FATAL, message, category);
     },
-    isFatalEnabled : function() {
-        return isLevelEnabled("fatal");
+    isFatalEnabled : function(category) {
+        return isLevelEnabled(levels.FATAL, category);
     }
 };
 
-function isLevelEnabled(level) {
-    return getLevel()>=levels.indexOf(level);
+function isLevelEnabled(level, category) {
+    return getLevel(category)>=Object.keys(levels).indexOf(level);
 }
 
-function log(level, message) {
-    if (isLevelEnabled(level)) {
+function log(level, message, category) {
+    if (isLevelEnabled(level, category)) {
         console.log(getPrefix() + message);
         return true;
     }
     return false;
 }
 
-function error(level, message) {
-    if (getLevel()>=levels.indexOf(level)) {
+function stdError(level, message, category) {
+    if (getLevel(category)>=Object.keys(levels).indexOf(level)) {
         console.error(getPrefix() + message);
         return true;
     }
     return false;
 }
 
-function getLevel() {
-    var level = "info";
-    if (process.env[opts.env_var]) {
-        level = process.env[opts.env_var].toLowerCase();
-    }
-    return levels.indexOf(level);
+function getLevel(category) {
+    var level = opts.categories[category] || opts.categories["default"];
+    return Object.keys(levels).indexOf(level);
 }
 
 function getPrefix() {
