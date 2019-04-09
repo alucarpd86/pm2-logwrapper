@@ -6,9 +6,7 @@ describe('logger enabled functions', () => {
     var levels = null;
 
     before(() => {
-        console.log = function(){};
-        console.error = function(){};
-        delete process.env.LOG_LEVEL;
+        overrideConsoleForTesting();
         logger = require('../index');
         message = "test message";
         levels = logger.levels;
@@ -57,3 +55,12 @@ describe('logger enabled functions', () => {
         });
     });
 });
+
+function overrideConsoleForTesting() {
+    console.log = function(message) {
+        return message;
+    };
+    console.error = function(message) {
+        return message;
+    };
+}

@@ -8,7 +8,6 @@ describe('default logger', () => {
 
     before(() => {
         overrideConsoleForTesting();
-        delete process.env.LOG_LEVEL;
         logger = require('../index');
         message = "test message";
         category = "custom_category";
