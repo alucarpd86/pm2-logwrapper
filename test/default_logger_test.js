@@ -7,8 +7,7 @@ describe('default logger', () => {
     var category = null;
 
     before(() => {
-        console.log = function(){};
-        console.error = function(){};
+        overrideConsoleForTesting();
         delete process.env.LOG_LEVEL;
         logger = require('../index');
         message = "test message";
@@ -59,3 +58,16 @@ describe('default logger', () => {
         });
     });
 });
+
+function overrideConsoleForTesting() {
+    var oldConsole = console.log;
+    console.log = function(message) {
+        oldConsole(message);
+        return message;
+    };
+    var oldErrorConsole = console.error;
+    console.error = function(message) {
+        oldErrorConsole(message);
+        return message;
+    };
+}

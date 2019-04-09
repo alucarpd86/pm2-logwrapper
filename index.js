@@ -30,12 +30,14 @@ module.exports = {
         if (!category) category="default";
         if (levelsArray.indexOf(level)==-1) level = levels.INFO;
         opts.categories[category] = level;
+        return opts.categories[category];
     },
 
     setCategories: function(categories) {
         if (categories && typeof categories == "object") {
             opts = Object.assign(opts, {categories: categories});
         }
+        return opts.categories;
     },
 
     levels: levels,
@@ -69,20 +71,18 @@ module.exports = {
     },
 
     error : function(message, category) {
-        let tmp = true;
         if (opts.errors_on_out)
-            tmp = log(levels.ERROR, message, category);
-        return tmp && stdError(levels.ERROR, message, category);
+            log(levels.ERROR, message, category);
+        return stdError(levels.ERROR, message, category);
     },
     isErrorEnabled : function(category) {
         return isLevelEnabled(levels.ERROR, category);
     },
 
     fatal : function(message, category) {
-        let tmp = true;
         if (opts.errors_on_out)
-            tmp = log(levels.FATAL, message, category);
-        return tmp && stdError(levels.FATAL, message, category);
+            log(levels.FATAL, message, category);
+        return stdError(levels.FATAL, message, category);
     },
     isFatalEnabled : function(category) {
         return isLevelEnabled(levels.FATAL, category);
@@ -95,18 +95,14 @@ function isLevelEnabled(level, category) {
 
 function log(level, message, category) {
     if (isLevelEnabled(level, category)) {
-        console.log(getPrefix() + message);
-        return true;
+        return console.log(getPrefix() + message);
     }
-    return false;
 }
 
 function stdError(level, message, category) {
     if (getLevel(category)>=levelsArray.indexOf(level)) {
-        console.error(getPrefix() + message);
-        return true;
+        return console.error(getPrefix() + message);
     }
-    return false;
 }
 
 function getLevel(category) {
