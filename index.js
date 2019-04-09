@@ -11,7 +11,6 @@ const levels = {
 const levelsArray = Object.keys(levels);
 
 var opts = {
-    env_var : "LOG_LEVEL",
     errors_on_out: false,
     categories: {
         "default": levels.INFO
@@ -21,9 +20,6 @@ var opts = {
 module.exports = {
     init : function(options) {
         opts = Object.assign(opts, options);
-        if (opts.env_var && process.env[opts.env_var]) {
-            opts.categories.default = process.env[opts.env_var];
-        }
     },
 
     setCategory : function(level, category) {

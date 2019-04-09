@@ -7,8 +7,7 @@ describe('category logger', () => {
     var category = null;
 
     before(() => {
-        console.log = function(){};
-        console.error = function(){};
+        overrideConsoleForTesting();
         logger = require('../index');
         message = "test message";
         category = "custom_category";
@@ -23,8 +22,8 @@ describe('category logger', () => {
             logger.init({ categories: categories });
         });
         it('default to info and custom category trace', () => {
-            expect(logger.trace(message, category)).to.equal(true);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.trace(message, category)).contains(console.log(message));
+            expect(logger.trace(message)).to.be.an('undefined');
         });
     });
 
@@ -36,27 +35,36 @@ describe('category logger', () => {
             logger.init({ categories: categories });
         });
         it('change single category', () => {
-            expect(logger.trace(message, category)).to.equal(false);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.trace(message, category)).to.be.an('undefined');
+            expect(logger.trace(message)).to.be.an('undefined');
 
             logger.setCategory(levels.TRACE, category);
 
-            expect(logger.trace(message, category)).to.equal(true);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.trace(message, category)).contains(console.log(message));
+            expect(logger.trace(message)).to.be.an('undefined');
         });
 
         it('change all categories', () => {
             logger.setCategory(levels.INFO, category);
-            expect(logger.trace(message, category)).to.equal(false);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.trace(message, category)).to.be.an('undefined');
+            expect(logger.trace(message)).to.be.an('undefined');
 
             var categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.TRACE;
             logger.setCategories(categories);
 
-            expect(logger.trace(message, category)).to.equal(true);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.trace(message, category)).contains(console.log(message));
+            expect(logger.trace(message)).to.be.an('undefined');
         });
     });
 });
+
+function overrideConsoleForTesting() {
+    console.log = function(message) {
+        return message;
+    };
+    console.error = function(message) {
+        return message;
+    };
+}

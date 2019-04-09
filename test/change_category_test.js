@@ -7,8 +7,7 @@ describe('change category', () => {
     var category = null;
 
     before(() => {
-        console.log = function(){};
-        console.error = function(){};
+        overrideConsoleForTesting();
         logger = require('../index');
         message = "test message";
         category = "custom_category";
@@ -23,11 +22,11 @@ describe('change category', () => {
             logger.init({categories: categories});
         });
         it('logging at INFO and DEBUG', () => {
-            expect(logger.info(message, category)).to.equal(true);
-            expect(logger.info(message)).to.equal(true);
+            expect(logger.info(message, category)).contains(console.log(message));
+            expect(logger.info(message)).contains(console.log(message));
             logger.setCategory(levels.DEBUG, category);
-            expect(logger.debug(message, category)).to.equal(true);
-            expect(logger.debug(message)).to.equal(false);
+            expect(logger.debug(message, category)).contains(console.log(message));
+            expect(logger.debug(message)).to.be.an('undefined');
         });
     });
 
@@ -39,16 +38,25 @@ describe('change category', () => {
             logger.init({categories: categories});
         });
         it('logging at INFO and DEBUG', () => {
-            expect(logger.info(message, category)).to.equal(true);
-            expect(logger.info(message)).to.equal(true);
+            expect(logger.info(message, category)).contains(console.log(message));
+            expect(logger.info(message)).contains(console.log(message));
 
             var categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.DEBUG;
             logger.setCategories(categories);
 
-            expect(logger.debug(message, category)).to.equal(true);
-            expect(logger.debug(message)).to.equal(false);
+            expect(logger.debug(message, category)).contains(console.log(message));
+            expect(logger.debug(message)).to.be.an('undefined');
         });
     });
 });
+
+function overrideConsoleForTesting() {
+    console.log = function(message) {
+        return message;
+    };
+    console.error = function(message) {
+        return message;
+    };
+}

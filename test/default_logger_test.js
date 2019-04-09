@@ -19,55 +19,51 @@ describe('default logger', () => {
     describe('default logger with no configuration and no categories', () => {
         it('log info and above', () => {
             logger.setCategory(levels.INFO);
-            expect(logger.fatal(message)).to.equal(true);
-            expect(logger.error(message)).to.equal(true);
-            expect(logger.warn(message)).to.equal(true);
-            expect(logger.info(message)).to.equal(true);
-            expect(logger.debug(message)).to.equal(false);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.fatal(message)).contains(console.log(message));
+            expect(logger.error(message)).contains(console.log(message));
+            expect(logger.warn(message)).contains(console.log(message));
+            expect(logger.info(message)).contains(console.log(message));
+            expect(logger.debug(message)).to.be.an('undefined');
+            expect(logger.trace(message)).to.be.an('undefined');
         });
     });
 
     describe('default logger with specified level and no categories', () => {
         it('log trace and above', () => {
             logger.setCategory(levels.TRACE);
-            expect(logger.fatal(message)).to.equal(true);
-            expect(logger.error(message)).to.equal(true);
-            expect(logger.warn(message)).to.equal(true);
-            expect(logger.info(message)).to.equal(true);
-            expect(logger.debug(message)).to.equal(true);
-            expect(logger.trace(message)).to.equal(true);
+            expect(logger.fatal(message)).contains(console.log(message));
+            expect(logger.error(message)).contains(console.log(message));
+            expect(logger.warn(message)).contains(console.log(message));
+            expect(logger.info(message)).contains(console.log(message));
+            expect(logger.debug(message)).contains(console.log(message));
+            expect(logger.trace(message)).contains(console.log(message));
         });
         it('log error and above', () => {
             logger.setCategory(levels.ERROR);
-            expect(logger.fatal(message)).to.equal(true);
-            expect(logger.error(message)).to.equal(true);
-            expect(logger.warn(message)).to.equal(false);
-            expect(logger.info(message)).to.equal(false);
-            expect(logger.debug(message)).to.equal(false);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.fatal(message)).contains(console.log(message));
+            expect(logger.error(message)).contains(console.log(message));
+            expect(logger.warn(message)).to.be.an('undefined');
+            expect(logger.info(message)).to.be.an('undefined');
+            expect(logger.debug(message)).to.be.an('undefined');
+            expect(logger.trace(message)).to.be.an('undefined');
         });
         it('log off', () => {
             logger.setCategory(levels.OFF);
-            expect(logger.fatal(message)).to.equal(false);
-            expect(logger.error(message)).to.equal(false);
-            expect(logger.warn(message)).to.equal(false);
-            expect(logger.info(message)).to.equal(false);
-            expect(logger.debug(message)).to.equal(false);
-            expect(logger.trace(message)).to.equal(false);
+            expect(logger.fatal(message)).to.be.an('undefined');
+            expect(logger.error(message)).to.be.an('undefined');
+            expect(logger.warn(message)).to.be.an('undefined');
+            expect(logger.info(message)).to.be.an('undefined');
+            expect(logger.debug(message)).to.be.an('undefined');
+            expect(logger.trace(message)).to.be.an('undefined');
         });
     });
 });
 
 function overrideConsoleForTesting() {
-    var oldConsole = console.log;
     console.log = function(message) {
-        oldConsole(message);
         return message;
     };
-    var oldErrorConsole = console.error;
     console.error = function(message) {
-        oldErrorConsole(message);
         return message;
     };
 }
