@@ -1,6 +1,5 @@
-var cluster = require('cluster');
-
-var levels = {
+const cluster = require('cluster');
+const levels = {
     OFF: "OFF",
     FATAL: "FATAL",
     ERROR: "ERROR",
@@ -9,6 +8,7 @@ var levels = {
     DEBUG: "DEBUG",
     TRACE: "TRACE"
 };
+const levelsArray = Object.keys(levels);
 
 var opts = {
     env_var : "LOG_LEVEL",
@@ -28,7 +28,7 @@ module.exports = {
 
     setCategory : function(level, category) {
         if (!category) category="default";
-        if (Object.keys(levels).indexOf(level)==-1) level = levels.INFO;
+        if (levelsArray.indexOf(level)==-1) level = levels.INFO;
         opts.categories[category] = level;
     },
 
@@ -90,7 +90,7 @@ module.exports = {
 };
 
 function isLevelEnabled(level, category) {
-    return getLevel(category)>=Object.keys(levels).indexOf(level);
+    return getLevel(category)>=levelsArray.indexOf(level);
 }
 
 function log(level, message, category) {
@@ -102,7 +102,7 @@ function log(level, message, category) {
 }
 
 function stdError(level, message, category) {
-    if (getLevel(category)>=Object.keys(levels).indexOf(level)) {
+    if (getLevel(category)>=levelsArray.indexOf(level)) {
         console.error(getPrefix() + message);
         return true;
     }
@@ -111,7 +111,7 @@ function stdError(level, message, category) {
 
 function getLevel(category) {
     var level = opts.categories[category] || opts.categories["default"];
-    return Object.keys(levels).indexOf(level);
+    return levelsArray.indexOf(level);
 }
 
 function getPrefix() {

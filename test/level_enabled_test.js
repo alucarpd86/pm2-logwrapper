@@ -6,6 +6,8 @@ describe('logger enabled functions', () => {
     var levels = null;
 
     before(() => {
+        console.log = function(){};
+        console.error = function(){};
         delete process.env.LOG_LEVEL;
         logger = require('../index');
         message = "test message";

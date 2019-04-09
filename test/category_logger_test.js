@@ -7,6 +7,8 @@ describe('category logger', () => {
     var category = null;
 
     before(() => {
+        console.log = function(){};
+        console.error = function(){};
         logger = require('../index');
         message = "test message";
         category = "custom_category";
