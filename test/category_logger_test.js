@@ -1,10 +1,10 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('category logger', () => {
-    var logger = null;
-    var message = null;
-    var levels = null;
-    var category = null;
+    let logger = null;
+    let message = null;
+    let levels = null;
+    let category = null;
 
     before(() => {
         overrideConsoleForTesting();
@@ -16,7 +16,7 @@ describe('category logger', () => {
 
     describe('logger with custom category', () => {
         before(() => {
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.TRACE;
             logger.init({ categories: categories });
@@ -29,7 +29,7 @@ describe('category logger', () => {
 
     describe('set single category', () => {
         before(() => {
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.INFO;
             logger.init({ categories: categories });
@@ -49,7 +49,7 @@ describe('category logger', () => {
             expect(logger.trace(message, category)).to.be.an('undefined');
             expect(logger.trace(message)).to.be.an('undefined');
 
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.TRACE;
             logger.setCategories(categories);

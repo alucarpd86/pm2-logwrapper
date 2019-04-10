@@ -1,12 +1,13 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
+const dateformat = require('dateformat');
 
 describe('default logger', () => {
-    var logger1 = null;
-    var logger2 = null;
-    var logger3 = null;
-    var message = null;
-    var levels = null;
-    var category = null;
+    let logger1 = null;
+    let logger2 = null;
+    let logger3 = null;
+    let message = null;
+    let levels = null;
+    let category = null;
 
     before(() => {
         overrideConsoleForTesting();
@@ -29,11 +30,84 @@ describe('default logger', () => {
 
 });
 
+describe('check errors_on_out flag', () => {
+    let logger = null;
+    let message = null;
+
+    before(() => {
+        overrideConsoleForWithFunction();
+        logger = require('../index')();
+        message = "test message";
+    });
+
+    it('log at fatal on standard out', () => {
+        expect(logger.fatal(message)).is.not.equal(consoleErrorFunction);
+        logger.init({
+            errors_on_std_error: true
+        });
+        expect(logger.fatal(message)).is.equal(consoleErrorFunction);
+    });
+});
+
+describe('check add_timestamp flag', () => {
+    let logger1 = null;
+    let message = null;
+    let dateFormat = null;
+
+    before(() => {
+        overrideConsoleForTesting();
+        logger1 = require('../index')();
+        message = "test message";
+        dateFormat = "yyyy-mm-dd HH:MM:ss";
+    });
+
+    it('log at fatal on standard out', () => {
+        expect(logger1.info(message)).not.contains(dateformat(new Date(), dateFormat));
+        logger1.init({
+            add_timestamp: true
+        });
+        expect(logger1.info(message)).contains(dateformat(new Date(), dateFormat));
+    });
+});
+
+describe('check timestamp_format flag', () => {
+    let logger1 = null;
+    let message = null;
+    let dateFormat = null;
+    let customDateFormat = null;
+
+    before(() => {
+        overrideConsoleForTesting();
+        logger1 = require('../index')();
+        message = "test message";
+        dateFormat = "yyyy-mm-dd HH:MM:ss";
+        customDateFormat = "YYYY-mm-dd";
+    });
+
+    it('log at fatal on standard out', () => {
+        expect(logger1.info(message)).not.contains(dateformat(new Date(), customDateFormat));
+        logger1.init({
+            add_timestamp: true,
+            timestamp_format: customDateFormat
+        });
+        expect(logger1.info(message)).contains(dateformat(new Date(), customDateFormat));
+    });
+});
+
 function overrideConsoleForTesting() {
-    console.log = function(message) {
-        return message;
-    };
-    console.error = function(message) {
-        return message;
-    };
+    console.log = consoleOutFunction;
+    console.error = consoleErrorFunction;
+}
+
+function overrideConsoleForWithFunction() {
+    console.log = function() { return consoleOutFunction };
+    console.error = function() { return consoleErrorFunction; };
+}
+
+function consoleErrorFunction(message) {
+    return message;
+}
+
+function consoleOutFunction(message) {
+    return message;
 }

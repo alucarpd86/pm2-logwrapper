@@ -15,7 +15,7 @@ module.exports = Logger;
 
 function Logger(category) {
     let opts = {
-        errors_on_out: false,
+        errors_on_std_error: false,
         add_timestamp: false,
         timestamp_format: "yyyy-mm-dd HH:MM:ss",
         default_category : category||"default",
@@ -78,17 +78,23 @@ function Logger(category) {
         return isLevelEnabled(levels.WARN, category);
     }
     function error(message, category) {
-        if (opts.errors_on_out)
+        if (opts.errors_on_std_error) {
             log(levels.ERROR, message, category);
-        return stdError(levels.ERROR, message, category);
+            return stdError(levels.ERROR, message, category);
+        } else {
+            return log(levels.ERROR, message, category);
+        }
     }
     function isErrorEnabled(category) {
         return isLevelEnabled(levels.ERROR, category);
     }
     function fatal(message, category) {
-        if (opts.errors_on_out)
+        if (opts.errors_on_std_error) {
             log(levels.FATAL, message, category);
-        return stdError(levels.FATAL, message, category);
+            return stdError(levels.FATAL, message, category);
+        } else {
+            return log(levels.FATAL, message, category);
+        }
     }
     function isFatalEnabled(category) {
         return isLevelEnabled(levels.FATAL, category);
@@ -114,12 +120,12 @@ function Logger(category) {
     }
 
     function getLevel(category) {
-        var level = opts.categories[category] || opts.categories[opts.default_category];
+        let level = opts.categories[category] || opts.categories[opts.default_category];
         return levelsArray.indexOf(level);
     }
 
     function getPrefix(category) {
-        var str = "";
+        let str = "";
         if (opts.add_timestamp) {
             str += dateformat(new Date(), opts.timestamp_format) + ": ";
         }

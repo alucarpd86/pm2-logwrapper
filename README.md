@@ -22,7 +22,7 @@ const logger = require('pm2-logwrapper')().getLogger("MY_CUSTOM_CATEGORY");
 
 ```js
 let opts = {
-    errors_on_out: false,
+    errors_on_std_error: false,
     add_timestamp: false,
     timestamp_format: "yyyy-mm-dd HH:MM:ss",
     default_category : "default",
@@ -32,7 +32,7 @@ let opts = {
 };
 ```
 
-- `errors_on_out`: if true will print `ERROR` and `FATAL` logs also on standard out. By default is false and will print these logs only on standard error.
+- `errors_on_std_error`: if true will print `ERROR` and `FATAL` logs also on standard error. By default is false and will print these logs only on standard out.
 - `add_timestamp`: if true will prepend the current timestamp to each log message. By default is false because PM2 can do it
 - `timestamp_format`: used to format the current timestamp, if add_timestamp is enabled. By default is "yyyy-mm-dd HH:MM:ss"
 - `default_category`: is the name of the default category if none is specified. By default is "default"
@@ -43,7 +43,7 @@ let opts = {
 
 ```js
 logger.init({
-     errors_on_out: false
+     errors_on_std_error: true
 });
 ```
 

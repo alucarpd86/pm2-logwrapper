@@ -1,9 +1,9 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('logger enabled functions', () => {
-    var logger = null;
-    var message = null;
-    var levels = null;
+    let logger = null;
+    let message = null;
+    let levels = null;
 
     before(() => {
         overrideConsoleForTesting();

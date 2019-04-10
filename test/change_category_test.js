@@ -1,10 +1,10 @@
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 describe('change category', () => {
-    var logger = null;
-    var message = null;
-    var levels = null;
-    var category = null;
+    let logger = null;
+    let message = null;
+    let levels = null;
+    let category = null;
 
     before(() => {
         overrideConsoleForTesting();
@@ -16,7 +16,7 @@ describe('change category', () => {
 
     describe('logger with categories at INFO and single category at DEBUG', () => {
         before(() => {
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.INFO;
             logger.init({categories: categories});
@@ -32,7 +32,7 @@ describe('change category', () => {
 
     describe('logger with updated categories to DEBUG', () => {
         before(() => {
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.INFO;
             logger.init({categories: categories});
@@ -41,7 +41,7 @@ describe('change category', () => {
             expect(logger.info(message, category)).contains(console.log(message));
             expect(logger.info(message)).contains(console.log(message));
 
-            var categories = {};
+            let categories = {};
             categories["default"] = levels.INFO;
             categories[category] = levels.DEBUG;
             logger.setCategories(categories);
