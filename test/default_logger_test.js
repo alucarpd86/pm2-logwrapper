@@ -8,10 +8,10 @@ describe('default logger', () => {
 
     before(() => {
         overrideConsoleForTesting();
-        logger = require('../index');
+        logger = require('../index')();
         message = "test message";
         category = "custom_category";
-        levels = logger.levels;
+        levels = logger.getLevels();
         logger.init();
     });
 

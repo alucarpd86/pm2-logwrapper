@@ -8,10 +8,10 @@ describe('change category', () => {
 
     before(() => {
         overrideConsoleForTesting();
-        logger = require('../index');
+        logger = require('../index')();
         message = "test message";
         category = "custom_category";
-        levels = logger.levels;
+        levels = logger.getLevels();
     });
 
     describe('logger with categories at INFO and single category at DEBUG', () => {

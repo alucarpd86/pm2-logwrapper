@@ -7,9 +7,9 @@ describe('logger enabled functions', () => {
 
     before(() => {
         overrideConsoleForTesting();
-        logger = require('../index');
+        logger = require('../index')();
         message = "test message";
-        levels = logger.levels;
+        levels = logger.getLevels();
         logger.init();
     });
 

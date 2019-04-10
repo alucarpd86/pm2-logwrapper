@@ -5,16 +5,41 @@ Useful when used with pm2 and/or docker
 > Create logger
 
 ```js
-const logger = require('pm2-logwrapper');
+const logger = require('pm2-logwrapper')();
 ```
 
-> By default the logger is initialized with only one category called `default` at level `INFO`. 
+> Create logger with specific category
 
 ```js
-logger.init();
+const logger = require('pm2-logwrapper')("MY_CUSTOM_CATEGORY");
+```
+or
+```js
+const logger = require('pm2-logwrapper')().getLogger("MY_CUSTOM_CATEGORY");
 ```
 
-> By default error and fatal messages are only sent to`console.error`. If you want you can append these loggers also on console.log with `errors_on_out` 
+> By default the logger is initialized with this set of options 
+
+```js
+let opts = {
+    errors_on_out: false,
+    add_timestamp: false,
+    timestamp_format: "yyyy-mm-dd HH:MM:ss",
+    default_category : "default",
+    categories: {
+        "default": "INFO"
+    }
+};
+```
+
+- `errors_on_out`: if true will print `ERROR` and `FATAL` logs also on standard out. By default is false and will print these logs only on standard error.
+- `add_timestamp`: if true will prepend the current timestamp to each log message. By default is false because PM2 can do it
+- `timestamp_format`: used to format the current timestamp, if add_timestamp is enabled. By default is "yyyy-mm-dd HH:MM:ss"
+- `default_category`: is the name of the default category if none is specified. By default is "default"
+- `categories`: object of each category you need to use with this logger. By default only "default" category is defined
+
+
+> You can specify different set of options by passing them to the `init` method. The object passed will be merged with the default configuration, so you don't need to specify every options, but only the options you need to change
 
 ```js
 logger.init({
@@ -22,34 +47,34 @@ logger.init({
 });
 ```
 
-> To Specify different categories you can initialize the library with ab object like. 
+> To Specify different categories you can initialize the library with an object like. 
 
 ```js
 logger.init({
     "categories": {
-        "myCustomCategory1": logger.levels.DEBUG,
-        "myCustomCategory2": logger.levels.TRACE
+        "myCustomCategory1": logger.getLevels().DEBUG,
+        "myCustomCategory2": logger.getLevels().TRACE
     }
 });
 ```
 
 > Categories can be changed also with 
 ```js
-logger.setCategory(logger.levels.INFO, "myCustomCategory1");
+logger.setCategory(logger.getLevels().INFO, "myCustomCategory1");
 ```
 
 or
 
 ```js
 logger.setCategories( {
-     "myCustomCategory1": logger.levels.DEBUG,
-     "myCustomCategory2": logger.levels.TRACE
+     "myCustomCategory1": logger.getLevels().DEBUG,
+     "myCustomCategory2": logger.getLevels().TRACE
 });
 ```
 
-> The levels allowed can be found
+> The log levels allowed can be found
 ```js
-logger.levels;
+logger.getLevels();
 ```
 >and the available values are:
 ```js
@@ -62,4 +87,20 @@ logger.levels;
     DEBUG: "DEBUG",
     TRACE: "TRACE"
 }
+```
+
+> The logging method, for each level are:
+```js
+logger.info("myMessage");
+```
+This method will use the `default` category log level for this `logger` instance. By default is `default` unless specified in the constructor or with `getLogger` method
+```js
+logger.info("myMessage","myCustomCategory");
+```
+This method will use `myCustomCategory` category log level for this `logger` instance
+
+> Each log level has a corresponding method to check if the log level is enabled
+```js
+logger.isInfoEnabled();
+logger.isInfoEnabled("myCustomCategory");
 ```
