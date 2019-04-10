@@ -1,6 +1,6 @@
 {
   "name": "pm2-logwrapper",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "log wrapper around console.log / console.error to implements different log category and levels",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,8 @@
   "devDependencies": {
     "mocha": "^6.1.2",
     "chai": "^4.2.0"
+  },
+  "dependencies": {
+    "dateformat": "^3.0.3"
   }
 }

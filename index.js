@@ -1,4 +1,5 @@
 const cluster = require('cluster');
+const dateformat = require('dateformat');
 const levels = {
     OFF: "OFF",
     FATAL: "FATAL",
@@ -12,6 +13,9 @@ const levelsArray = Object.keys(levels);
 
 var opts = {
     errors_on_out: false,
+    add_timestamp: false,
+    timestamp_format: "yyyy-mm-dd HH:MM:ss",
+    default_category : "default",
     categories: {
         "default": levels.INFO
     }
@@ -22,8 +26,16 @@ module.exports = {
         opts = Object.assign(opts, options);
     },
 
+    getLogger : function(category) {
+        opts.default_category = category;
+        if (!opts.categories[opts.default_category]) {
+            opts.categories[opts.default_category] = levels.INFO;
+        }
+        return this;
+    },
+
     setCategory : function(level, category) {
-        if (!category) category="default";
+        if (!category) category=opts.default_category;
         if (levelsArray.indexOf(level)==-1) level = levels.INFO;
         opts.categories[category] = level;
         return opts.categories[category];
@@ -91,23 +103,29 @@ function isLevelEnabled(level, category) {
 
 function log(level, message, category) {
     if (isLevelEnabled(level, category)) {
-        return console.log(getPrefix() + message);
+        return console.log(getPrefix(category) + message);
     }
 }
 
 function stdError(level, message, category) {
     if (getLevel(category)>=levelsArray.indexOf(level)) {
-        return console.error(getPrefix() + message);
+        return console.error(getPrefix(category) + message);
     }
 }
 
 function getLevel(category) {
-    var level = opts.categories[category] || opts.categories["default"];
+    var level = opts.categories[category] || opts.categories[opts.default_category];
     return levelsArray.indexOf(level);
 }
 
-function getPrefix() {
-    return "["+getId()+"]" + " ";
+function getPrefix(category) {
+    var str = "";
+    if (opts.add_timestamp) {
+        str += dateformat(new Date(), opts.timestamp_format) + ": ";
+    }
+    str += "[" + (category||opts.default_category) + "] ";
+    str+="["+getId()+"]" + " ";
+    return str;
 }
 
 function getId() {
