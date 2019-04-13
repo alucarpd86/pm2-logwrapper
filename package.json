@@ -21,7 +21,8 @@
   "homepage": "https://github.com/alucarpd86/pm2-logwrapper#readme",
   "devDependencies": {
     "mocha": "^6.1.2",
-    "chai": "^4.2.0"
+    "chai": "^4.2.0",
+    "nyc": "^13.3.0"
   },
   "dependencies": {
     "dateformat": "^3.0.3"

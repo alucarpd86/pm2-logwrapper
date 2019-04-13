@@ -42,10 +42,12 @@ describe('check errors_on_out flag', () => {
 
     it('log at fatal on standard out', () => {
         expect(logger.fatal(message)).is.not.equal(consoleErrorFunction);
+        expect(logger.error(message)).is.not.equal(consoleErrorFunction);
         logger.init({
             errors_on_std_error: true
         });
         expect(logger.fatal(message)).is.equal(consoleErrorFunction);
+        expect(logger.error(message)).is.equal(consoleErrorFunction);
     });
 });
 
