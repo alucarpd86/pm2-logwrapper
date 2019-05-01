@@ -1,6 +1,6 @@
 {
   "name": "pm2-logwrapper",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "log wrapper around console.log / console.error to implements different log category and levels",
   "main": "index.js",
   "scripts": {

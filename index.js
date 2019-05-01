@@ -120,7 +120,7 @@ function Logger(category) {
     }
 
     function getLevel(category) {
-        let level = opts.categories[category] || opts.categories[opts.default_category];
+        let level = opts.categories[category] || opts.categories[opts.default_category] || opts.categories["default"];
         return levelsArray.indexOf(level);
     }
 
