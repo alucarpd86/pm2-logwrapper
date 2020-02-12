@@ -17,6 +17,8 @@ function Logger(category) {
     let opts = {
         errors_on_std_error: false,
         add_timestamp: false,
+        add_process: true,
+        add_category: true,
         timestamp_format: "yyyy-mm-dd HH:MM:ss",
         default_category : category||"default",
         categories: {
@@ -129,8 +131,12 @@ function Logger(category) {
         if (opts.add_timestamp) {
             str += dateformat(new Date(), opts.timestamp_format) + ": ";
         }
-        str += "[" + (category||opts.default_category) + "] ";
-        str+="["+getId()+"]" + " ";
+        if (opts.add_category) {
+            str += "[" + (category || opts.default_category) + "] ";
+        }
+        if (opts.add_process) {
+            str += "[" + getId() + "]" + " ";
+        }
         return str;
     }
 
