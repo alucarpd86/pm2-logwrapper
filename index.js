@@ -111,13 +111,13 @@ function Logger(category) {
     ///////////////////////
     function log(level, message, category) {
         if (isLevelEnabled(level, category)) {
-            return console.log(getPrefix(category) + message);
+            return console.log(getPrefix(category,level) + message);
         }
     }
 
     function stdError(level, message, category) {
         if (getLevel(category)>=levelsArray.indexOf(level)) {
-            return console.error(getPrefix(category) + message);
+            return console.error(getPrefix(category,level) + message);
         }
     }
 
@@ -126,7 +126,7 @@ function Logger(category) {
         return levelsArray.indexOf(level);
     }
 
-    function getPrefix(category) {
+    function getPrefix(category, level) {
         let str = "";
         if (opts.add_timestamp) {
             str += dateformat(new Date(), opts.timestamp_format) + ": ";
@@ -137,6 +137,7 @@ function Logger(category) {
         if (opts.add_process) {
             str += "[" + getId() + "]" + " ";
         }
+        str+= "["+level+"] ";
         return str;
     }
 
