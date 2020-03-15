@@ -131,13 +131,13 @@ function Logger(category) {
         if (opts.add_timestamp) {
             str += dateformat(new Date(), opts.timestamp_format) + ": ";
         }
+        str+= "["+level+"] ";
         if (opts.add_category) {
             str += "[" + (category || opts.default_category) + "] ";
         }
         if (opts.add_process) {
             str += "[" + getId() + "]" + " ";
         }
-        str+= "["+level+"] ";
         return str;
     }
 
