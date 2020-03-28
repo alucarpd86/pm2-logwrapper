@@ -111,6 +111,7 @@ function Logger(category) {
     ///////////////////////
     function log(level, message, category) {
         if (isLevelEnabled(level, category)) {
+            if (typeof message!="string") message = JSON.stringify(message);
             return console.log(getPrefix(category,level) + message);
         }
     }
