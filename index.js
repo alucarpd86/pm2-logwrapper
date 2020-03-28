@@ -118,6 +118,7 @@ function Logger(category) {
 
     function stdError(level, message, category) {
         if (getLevel(category)>=levelsArray.indexOf(level)) {
+            if (typeof message!="string") message = JSON.stringify(message);
             return console.error(getPrefix(category,level) + message);
         }
     }
