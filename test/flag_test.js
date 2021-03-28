@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const dateformat = require('dateformat');
+const dateformatLib = require('date-format');
 
 describe('default logger', () => {
     let logger1 = null;
@@ -64,11 +64,11 @@ describe('check add_timestamp flag', () => {
     });
 
     it('log at fatal on standard out', () => {
-        expect(logger1.info(message)).not.contains(dateformat(new Date(), dateFormat));
+        expect(logger1.info(message)).not.contains(dateformatLib(dateFormat, new Date()));
         logger1.init({
             add_timestamp: true
         });
-        expect(logger1.info(message)).contains(dateformat(new Date(), dateFormat));
+        expect(logger1.info(message)).contains(dateformatLib(dateFormat, new Date()));
     });
 });
 
@@ -87,12 +87,12 @@ describe('check timestamp_format flag', () => {
     });
 
     it('log at fatal on standard out', () => {
-        expect(logger1.info(message)).not.contains(dateformat(new Date(), customDateFormat));
+        expect(logger1.info(message)).not.contains(dateformatLib.asString(customDateFormat, new Date()));
         logger1.init({
             add_timestamp: true,
             timestamp_format: customDateFormat
         });
-        expect(logger1.info(message)).contains(dateformat(new Date(), customDateFormat));
+        expect(logger1.info(message)).contains(dateformatLib.asString(customDateFormat, new Date()));
     });
 });
 

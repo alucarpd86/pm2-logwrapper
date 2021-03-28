@@ -1,5 +1,4 @@
 const expect = require('chai').expect;
-const dateformat = require('dateformat');
 
 describe('default logger', () => {
   let logger = null;

@@ -1,5 +1,5 @@
 const cluster = require('cluster');
-const dateformat = require('dateformat');
+const dateformat = require('date-format');
 const levels = {
     OFF: "OFF",
     FATAL: "FATAL",
@@ -131,7 +131,7 @@ function Logger(category) {
     function getPrefix(category, level) {
         let str = "";
         if (opts.add_timestamp) {
-            str += dateformat(new Date(), opts.timestamp_format) + ": ";
+            str += dateformat.asString(opts.timestamp_format, new Date()) + ": ";
         }
         str+= "["+level+"] ";
         if (opts.add_category) {
